@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.genxiaogu.bigdata.ratelimiter</groupId>
+	<artifactId>rate-limiter-spring-boot-starter</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+	<name>rate-limiter-spring-boot-starter</name>
+	<description>rate-limiter</description>
+	<url>https://github.com/gengu/rate-limiter-spring-boot-starter</url>
+
+	<developers>
+		<developer>
+			<id>genxiaogu</id>
+			<name>亘小古</name>
+			<email>gengugu@foxmail.com</email>
+			<url>http://www.genxiaogu.com</url>
+			<roles>
+				<role>owner</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>junzijian</id>
+			<name>君子剑</name>
+			<email>liuzhe3015@foxmail.com</email>
+			<url>http://junzijian.github.io</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<scm>
+		<url>https://github.com/gengu/rate-limiter-spring-boot-starter</url>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<spring-boot.version>1.4.2.RELEASE</spring-boot.version>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+	</dependencies>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
