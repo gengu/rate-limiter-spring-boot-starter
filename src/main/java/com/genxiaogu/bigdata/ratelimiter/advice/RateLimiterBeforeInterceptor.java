@@ -29,7 +29,7 @@ public class RateLimiterBeforeInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         String route = "";
-        int limit = 10;
+        int limit = 100;
 
         Method method = methodInvocation.getMethod();
 
