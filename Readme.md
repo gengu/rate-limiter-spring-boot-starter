@@ -30,7 +30,7 @@ public @interface Limiter {
 > 在pom.xml中添加依赖
 ```xml
 <dependency>
-    <groupId>com.genxiaogu.bigdata.ratelimiter</groupId>
+    <groupId>com.genxiaogu</groupId>
     <artifactId>rate-limiter-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -95,3 +95,4 @@ Failed transactions:	          23
 Longest transaction:	        0.14
 Shortest transaction:	        0.00
 ```
+
