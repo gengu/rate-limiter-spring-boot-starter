@@ -16,7 +16,7 @@ public @interface Limiter {
      * 限流route
      * @return
      */
-    String route() default "";
+    String route();
 
     /**
      * 限流次数
