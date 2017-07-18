@@ -33,7 +33,7 @@ public class DistributedLimiter implements Limiter {
      * @param limit
      * @return
      */
-    public boolean execute(String key, int limit) {
+    public synchronized boolean execute(String key, int limit) {
         if(!keys.contains(key)){
             redisTemplate.delete(key);
             keys.add(key) ;
@@ -43,6 +43,7 @@ public class DistributedLimiter implements Limiter {
         if(boundValueOps.get() == null) {
             boundValueOps.set("0");
             boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
+            System.out.println("add value to redis,key=" + key + ",second=" + (System.currentTimeMillis() / 1000));
             return true ;
         }
         else {
