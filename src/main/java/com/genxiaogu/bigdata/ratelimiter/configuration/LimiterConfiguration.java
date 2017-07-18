@@ -22,11 +22,6 @@ public class LimiterConfiguration {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    @Bean
-    DistributedLimiter init() {
-        return new DistributedLimiter(stringRedisTemplate) ;
-    }
-
     /**
      * 自动代理生成器
      * 这个类可以扫描所有的切面类，并为其自动生成代理。

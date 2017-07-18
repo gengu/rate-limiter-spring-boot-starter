@@ -16,34 +16,32 @@ import java.util.concurrent.TimeUnit;
  */
 public class DistributedLimiter implements Limiter {
 
-    private static Set<String> keys = new HashSet<String>() ;
-
     private RedisTemplate<String , String> redisTemplate;
 
+    private String route ;
+
+    private Integer limit ;
     /**
      * @param redisTemplate
      */
-    public DistributedLimiter(RedisTemplate redisTemplate) {
+    public DistributedLimiter(RedisTemplate redisTemplate , String route , Integer limit) {
         this.redisTemplate = redisTemplate;
+        this.route  = route ;
+        this.limit = limit ;
     }
 
     /**
      * 第一次如果key存在则从redis删除，并加入到keySet,相当于是初始化
-     * @param key
-     * @param limit
      * @return
      */
-    public synchronized boolean execute(String key, int limit) {
-        if(!keys.contains(key)){
-            redisTemplate.delete(key);
-            keys.add(key) ;
-        }
-        BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(key);
+    public synchronized boolean execute() {
+
+        BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(route);
 
         if(boundValueOps.get() == null) {
             boundValueOps.set("1");
             boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
-            System.out.println("add value to redis,key=" + key + ",second=" + (System.currentTimeMillis() / 1000));
+            System.out.println("add value to redis,key=" + route + ",second=" + (System.currentTimeMillis() / 1000));
             return true ;
         }
         else {

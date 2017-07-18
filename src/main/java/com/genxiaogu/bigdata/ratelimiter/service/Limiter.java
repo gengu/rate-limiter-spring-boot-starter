@@ -5,5 +5,5 @@ package com.genxiaogu.bigdata.ratelimiter.service;
  */
 public interface Limiter {
 
-    boolean execute(String router, int limit);
+    boolean execute();
 }
