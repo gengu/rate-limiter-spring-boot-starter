@@ -41,7 +41,7 @@ public class DistributedLimiter implements Limiter {
         BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(key);
 
         if(boundValueOps.get() == null) {
-            boundValueOps.set("0");
+            boundValueOps.set("1");
             boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
             System.out.println("add value to redis,key=" + key + ",second=" + (System.currentTimeMillis() / 1000));
             return true ;
