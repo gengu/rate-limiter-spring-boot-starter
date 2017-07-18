@@ -26,7 +26,12 @@ public class RateLimiterBeforeInterceptor implements MethodInterceptor {
     @Autowired
     DistributedLimiter distributedLimiter;
 
-    @Override
+    /**
+     * 执行逻辑
+     * @param methodInvocation
+     * @return
+     * @throws Throwable
+     */
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         String route = "";
         int limit = 100;

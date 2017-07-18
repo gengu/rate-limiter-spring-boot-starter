@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,14 +16,28 @@ import java.util.concurrent.TimeUnit;
  */
 public class DistributedLimiter implements Limiter {
 
+    private static Set<String> keys = new HashSet<String>() ;
+
     private RedisTemplate<String , String> redisTemplate;
 
+    /**
+     * @param redisTemplate
+     */
     public DistributedLimiter(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
-    @Override
+    /**
+     * 第一次如果key存在则从redis删除，并加入到keySet,相当于是初始化
+     * @param key
+     * @param limit
+     * @return
+     */
     public boolean execute(String key, int limit) {
+        if(!keys.contains(key)){
+            redisTemplate.delete(key);
+            keys.add(key) ;
+        }
         BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(key);
 
         if(boundValueOps.get() == null) {

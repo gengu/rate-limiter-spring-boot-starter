@@ -9,6 +9,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -36,13 +38,17 @@ public class RateLimiterAdvisor extends StaticMethodMatcherPointcutAdvisor {
      * @param clazz
      * @return
      */
-    @Override
     public boolean matches(Method method, Class<?> clazz) {
         Method[] methods = clazz.getMethods();
         for (Method mod : methods) {
             Limiter methodAnnotation = mod.getAnnotation(Limiter.class);
             if (null != methodAnnotation) {
-                logger.info(String.format("======%s .. %s ======" ,clazz.getCanonicalName(), mod.getName()) );
+                logger.info(String.format("======%s .. %s .. %s .. %s .. %s ======"
+                    , method.getName()
+                    ,this.getPointcut()
+                    ,Thread.currentThread().getName() ,
+                    clazz.getCanonicalName(),
+                    mod.getName()) );
                 return true;
             }
         }
