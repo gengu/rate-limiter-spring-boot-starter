@@ -34,17 +34,16 @@ public class DistributedLimiter implements Limiter {
      * 第一次如果key存在则从redis删除，并加入到keySet,相当于是初始化
      * @return
      */
-    public synchronized boolean execute() {
+    public boolean execute() {
 
         BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(route);
 
-        if(boundValueOps.get() == null) {
-            boundValueOps.set("1");
+        if(boundValueOps.setIfAbsent("1")){
             boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
-            System.out.println("add value to redis,key=" + route + ",second=" + (System.currentTimeMillis() / 1000));
+            System.out.println(
+                "add value to redis,key=" + route + ",second=" + (System.currentTimeMillis() / 1000));
             return true ;
-        }
-        else {
+        }else{
             long currentCount = boundValueOps.increment(1);
             if (currentCount > limit) {
                 return false;
