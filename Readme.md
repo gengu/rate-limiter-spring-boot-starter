@@ -96,3 +96,9 @@ Longest transaction:	        0.14
 Shortest transaction:	        0.00
 ```
 
+
+## TOList
+[ ] 统计每个route的拦截次数以及通过次数
+[ ] 统计被拦截的IP地址信息等，预防DDOS很有用
+[ ] 现在抛异常的方案太过粗暴，可以定义接口由客户端来实现逻辑
+[ ] 针对不同的用户进行不同的流量控制
