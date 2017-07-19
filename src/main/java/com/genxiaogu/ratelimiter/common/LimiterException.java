@@ -1,4 +1,4 @@
-package com.genxiaogu.bigdata.ratelimiter.common;
+package com.genxiaogu.ratelimiter.common;
 
 /**
  * Created by wb-lz260260 on 2017/7/4.

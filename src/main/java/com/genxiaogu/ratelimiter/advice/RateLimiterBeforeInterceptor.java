@@ -1,14 +1,13 @@
-package com.genxiaogu.bigdata.ratelimiter.advice;
+package com.genxiaogu.ratelimiter.advice;
 
-import com.genxiaogu.bigdata.ratelimiter.annotation.Limiter;
-import com.genxiaogu.bigdata.ratelimiter.common.LimiterException;
-import com.genxiaogu.bigdata.ratelimiter.service.impl.DistributedLimiter;
+import com.genxiaogu.ratelimiter.annotation.Limiter;
+import com.genxiaogu.ratelimiter.common.LimiterException;
+import com.genxiaogu.ratelimiter.service.impl.DistributedLimiter;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

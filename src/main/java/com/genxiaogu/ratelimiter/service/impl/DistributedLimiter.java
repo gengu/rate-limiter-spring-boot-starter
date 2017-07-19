@@ -1,14 +1,9 @@
-package com.genxiaogu.bigdata.ratelimiter.service.impl;
+package com.genxiaogu.ratelimiter.service.impl;
 
-import com.genxiaogu.bigdata.ratelimiter.service.Limiter;
+import com.genxiaogu.ratelimiter.service.Limiter;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.util.StringUtils;
-import redis.clients.jedis.Jedis;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**

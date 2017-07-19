@@ -1,8 +1,7 @@
-package com.genxiaogu.bigdata.ratelimiter.configuration;
+package com.genxiaogu.ratelimiter.configuration;
 
-import com.genxiaogu.bigdata.ratelimiter.advice.RateLimiterAdvisor;
-import com.genxiaogu.bigdata.ratelimiter.advice.RateLimiterBeforeInterceptor;
-import com.genxiaogu.bigdata.ratelimiter.service.impl.DistributedLimiter;
+import com.genxiaogu.ratelimiter.advice.RateLimiterAdvisor;
+import com.genxiaogu.ratelimiter.advice.RateLimiterBeforeInterceptor;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,6 @@
-package com.genxiaogu.bigdata.ratelimiter.advice;
+package com.genxiaogu.ratelimiter.advice;
 
-import com.genxiaogu.bigdata.ratelimiter.annotation.Limiter;
+import com.genxiaogu.ratelimiter.annotation.Limiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**

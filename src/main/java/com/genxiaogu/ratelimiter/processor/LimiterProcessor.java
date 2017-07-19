@@ -1,6 +1,6 @@
-package com.genxiaogu.bigdata.ratelimiter.processor;
+package com.genxiaogu.ratelimiter.processor;
 
-import com.genxiaogu.bigdata.ratelimiter.annotation.Limiter;
+import com.genxiaogu.ratelimiter.annotation.Limiter;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.Element;

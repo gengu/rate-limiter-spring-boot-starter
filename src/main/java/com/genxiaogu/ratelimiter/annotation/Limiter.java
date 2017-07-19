@@ -1,4 +1,4 @@
-package com.genxiaogu.bigdata.ratelimiter.annotation;
+package com.genxiaogu.ratelimiter.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
