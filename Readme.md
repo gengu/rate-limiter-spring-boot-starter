@@ -32,7 +32,7 @@ public @interface Limiter {
 <dependency>
     <groupId>com.genxiaogu</groupId>
     <artifactId>rate-limiter-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 
 ```
