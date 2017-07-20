@@ -14,8 +14,10 @@ import java.util.Set;
  * 编译阶段检查
  * @author genxiaogu
  */
-@SupportedAnnotationTypes("com.genxiaogu.ratelimiter.annotation.Limiter")
+@SupportedAnnotationTypes({"com.genxiaogu.ratelimiter.annotation.Limiter"})
 public class LimiterProcessor extends AbstractProcessor {
+
+    public static String className = "com.genxiaogu.ratelimiter.annotation.Limiter" ;
 
     /**
      * 检查注解的适用方法
@@ -26,17 +28,15 @@ public class LimiterProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        System.out.println("hello world==========" ) ;
         for (TypeElement currentAnnotation : annotations) {
             Name qualifiedName = currentAnnotation.getQualifiedName();
-            if (qualifiedName.contentEquals("Limiter")) {
+            if (qualifiedName.contentEquals(className)) {
                 Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(currentAnnotation);
                 for (Element element : annotatedElements) {
                     Limiter limiter = element.getAnnotation(Limiter.class);
                     String router = limiter.route();
                     int limit = limiter.limit();
                     if (limit <= 0 ) {
-
                         String errMsg = "Limiter cannot be negative. limit = " + limit ;
                         Messager messager = this.processingEnv.getMessager();
                         messager.printMessage(Diagnostic.Kind.ERROR , errMsg , element);
