@@ -1,7 +1,7 @@
 package com.genxiaogu.ratelimiter.configuration;
 
-import com.genxiaogu.ratelimiter.advice.RateLimiterAdvisor;
-import com.genxiaogu.ratelimiter.advice.RateLimiterBeforeInterceptor;
+import com.genxiaogu.ratelimiter.advice.MethodRateLimiterAdvisor;
+import com.genxiaogu.ratelimiter.advice.MethodRateLimiterBeforeInterceptor;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +32,12 @@ public class LimiterConfiguration {
     }
 
     @Bean
-    public RateLimiterBeforeInterceptor myAroundInterceptor(){
-        return new RateLimiterBeforeInterceptor() ;
+    public MethodRateLimiterBeforeInterceptor myAroundInterceptor(){
+        return new MethodRateLimiterBeforeInterceptor() ;
     }
 
     @Bean
-    public RateLimiterAdvisor myAdvisor(){
-        return new RateLimiterAdvisor() ;
+    public MethodRateLimiterAdvisor myAdvisor(){
+        return new MethodRateLimiterAdvisor() ;
     }
 }

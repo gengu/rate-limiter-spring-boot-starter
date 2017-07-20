@@ -20,9 +20,9 @@ import java.util.HashMap;
  * @author genxiaogu
  */
 @Component
-public class RateLimiterBeforeInterceptor implements MethodInterceptor {
+public class MethodRateLimiterBeforeInterceptor implements MethodInterceptor {
 
-    Logger logger = LoggerFactory.getLogger(RateLimiterBeforeInterceptor.class) ;
+    Logger logger = LoggerFactory.getLogger(MethodRateLimiterBeforeInterceptor.class) ;
 
     @Autowired
     private RedisTemplate<String , String> redisTemplate;

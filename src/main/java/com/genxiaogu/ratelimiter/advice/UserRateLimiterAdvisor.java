@@ -1,5 +1,9 @@
 package com.genxiaogu.ratelimiter.advice;
 
+import java.lang.reflect.Method;
+
+import javax.annotation.PostConstruct;
+
 import com.genxiaogu.ratelimiter.annotation.Limiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,23 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-
-import java.lang.reflect.Method;
-
 /**
  * 静态切入点
- * 用于匹配静态方法的切面
+ * 用于匹配用户层面的切面
  * Created by wb-lz260260 on 2017/7/4.
  */
 @Component
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-public class RateLimiterAdvisor extends StaticMethodMatcherPointcutAdvisor {
+public class UserRateLimiterAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
-    Logger logger = LoggerFactory.getLogger(RateLimiterAdvisor.class) ;
+    Logger logger = LoggerFactory.getLogger(UserRateLimiterAdvisor.class) ;
 
     @Autowired
-    RateLimiterBeforeInterceptor advice ;
+    MethodRateLimiterBeforeInterceptor advice ;
 
     @PostConstruct
     public void init(){

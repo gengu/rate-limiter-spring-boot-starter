@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by genxiaogu on 2017/7/4.
+ * Created by genxiaogu on 2017/7/20.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface Limiter {
+@Target({ElementType.PARAMETER})
+public @interface UserLimiter {
 
     /**
      * 限流route
