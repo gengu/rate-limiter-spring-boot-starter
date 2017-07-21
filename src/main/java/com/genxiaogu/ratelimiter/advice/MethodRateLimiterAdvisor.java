@@ -36,6 +36,7 @@ public class MethodRateLimiterAdvisor extends StaticMethodMatcherPointcutAdvisor
      * @param clazz
      * @return
      */
+    @Override
     public boolean matches(Method method, Class<?> clazz) {
         Method[] methods = clazz.getMethods();
         for (Method mod : methods) {

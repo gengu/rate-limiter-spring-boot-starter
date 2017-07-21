@@ -2,6 +2,9 @@ package com.genxiaogu.ratelimiter.configuration;
 
 import com.genxiaogu.ratelimiter.advice.MethodRateLimiterAdvisor;
 import com.genxiaogu.ratelimiter.advice.MethodRateLimiterBeforeInterceptor;
+import com.genxiaogu.ratelimiter.advice.UserRateLimiterAdvisor;
+import com.genxiaogu.ratelimiter.advice.UserRateLimiterBeforeInterceptor;
+import com.genxiaogu.ratelimiter.service.impl.DistributedLimiter;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +35,28 @@ public class LimiterConfiguration {
     }
 
     @Bean
-    public MethodRateLimiterBeforeInterceptor myAroundInterceptor(){
+    public MethodRateLimiterBeforeInterceptor methodAroundInterceptor(){
         return new MethodRateLimiterBeforeInterceptor() ;
     }
 
     @Bean
-    public MethodRateLimiterAdvisor myAdvisor(){
+    public UserRateLimiterBeforeInterceptor userRateLimiterBeforeInterceptor(){
+        return new UserRateLimiterBeforeInterceptor() ;
+    }
+
+    @Bean
+    public MethodRateLimiterAdvisor methodAdvisor(){
         return new MethodRateLimiterAdvisor() ;
     }
+
+    @Bean
+    public UserRateLimiterAdvisor userAdvisor(){
+        return new UserRateLimiterAdvisor() ;
+    }
+
+    @Bean
+    public DistributedLimiter distributedLimiter(){
+        return new DistributedLimiter(stringRedisTemplate) ;
+    }
+
 }

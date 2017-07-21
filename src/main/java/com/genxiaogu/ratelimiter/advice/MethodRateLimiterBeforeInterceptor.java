@@ -35,6 +35,7 @@ public class MethodRateLimiterBeforeInterceptor implements MethodInterceptor {
      * @return
      * @throws Throwable
      */
+    @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         String route = "";
         int limit = 1;

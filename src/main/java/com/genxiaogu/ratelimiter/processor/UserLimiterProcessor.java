@@ -1,23 +1,31 @@
 package com.genxiaogu.ratelimiter.processor;
 
-import com.genxiaogu.ratelimiter.annotation.Limiter;
-import org.springframework.util.StringUtils;
+import java.util.Set;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.util.Set;
+
+import com.genxiaogu.ratelimiter.annotation.Limiter;
+import com.genxiaogu.ratelimiter.annotation.UserLimiter;
+import org.springframework.util.StringUtils;
 
 /**
  * 编译阶段检查
  * @author genxiaogu
  */
-@SupportedAnnotationTypes({"com.genxiaogu.ratelimiter.annotation.Limiter"})
-public class LimiterProcessor extends AbstractProcessor {
+@SupportedAnnotationTypes({"com.genxiaogu.ratelimiter.annotation.UserLimiter"})
+public class UserLimiterProcessor extends AbstractProcessor {
 
-    public static String className = "com.genxiaogu.ratelimiter.annotation.Limiter" ;
+    /**
+     * 参数拦截
+     */
+    public static String userLimiterName = "com.genxiaogu.ratelimiter.annotation.UserLimiter" ;
 
     /**
      * 检查注解的适用方法
@@ -30,19 +38,19 @@ public class LimiterProcessor extends AbstractProcessor {
 
         for (TypeElement currentAnnotation : annotations) {
             Name qualifiedName = currentAnnotation.getQualifiedName();
-            if (qualifiedName.contentEquals(className)) {
+            if (qualifiedName.contentEquals(userLimiterName)) {
                 Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(currentAnnotation);
                 for (Element element : annotatedElements) {
-                    Limiter limiter = element.getAnnotation(Limiter.class);
+                    UserLimiter limiter = element.getAnnotation(UserLimiter.class);
                     String router = limiter.route();
                     int limit = limiter.limit();
                     if (limit <= 0 ) {
-                        String errMsg = "Limiter cannot be negative. limit = " + limit ;
+                        String errMsg = "UserLimiter limit argument cannot be negative. limit = " + limit ;
                         Messager messager = this.processingEnv.getMessager();
                         messager.printMessage(Diagnostic.Kind.ERROR , errMsg , element);
                         return true ;
                     }else if(StringUtils.isEmpty(router)){
-                        String errMsg  = "router cannot be empty ." ;
+                        String errMsg  = "UserLimiter route argument cannot be empty ." ;
                         Messager messager = this.processingEnv.getMessager();
                         messager.printMessage(Diagnostic.Kind.ERROR , errMsg , element);
                         return true ;

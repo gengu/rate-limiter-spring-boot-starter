@@ -1,1 +1,2 @@
-com.genxiaogu.ratelimiter.processor.LimiterProcessor
+com.genxiaogu.ratelimiter.processor.MethodLimiterProcessor
+com.genxiaogu.ratelimiter.processor.UserLimiterProcessor

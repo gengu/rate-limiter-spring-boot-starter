@@ -25,13 +25,55 @@ public class DistributedLimiter implements Limiter {
         this.limit = limit ;
     }
 
+    public DistributedLimiter(
+        RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
     /**
      * 第一次如果key存在则从redis删除，并加入到keySet,相当于是初始化
      * @return
      */
+    @Override
     public boolean execute() {
 
         BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(route);
+
+        if(boundValueOps.setIfAbsent("1")){
+            boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
+            System.out.println(
+                "add value to redis,key=" + route + ",second=" + (System.currentTimeMillis() / 1000));
+            return true ;
+        }else{
+            long currentCount = boundValueOps.increment(1);
+            if (currentCount > limit) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    @Override
+    public boolean execute(String route , Integer limit){
+        BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(route);
+
+        if(boundValueOps.setIfAbsent("1")){
+            boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
+            System.out.println(
+                "add value to redis,key=" + route + ",second=" + (System.currentTimeMillis() / 1000));
+            return true ;
+        }else{
+            long currentCount = boundValueOps.increment(1);
+            if (currentCount > limit) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    @Override
+    public boolean execute(String route , Integer limit ,String obj){
+        BoundValueOperations<String, String> boundValueOps = redisTemplate.boundValueOps(route.concat(obj));
 
         if(boundValueOps.setIfAbsent("1")){
             boundValueOps.expire(1000, TimeUnit.MILLISECONDS);
