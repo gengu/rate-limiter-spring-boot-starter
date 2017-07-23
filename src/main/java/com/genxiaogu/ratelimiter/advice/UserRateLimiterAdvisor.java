@@ -28,7 +28,7 @@ public class UserRateLimiterAdvisor extends StaticMethodMatcherPointcutAdvisor {
     Logger logger = LoggerFactory.getLogger(UserRateLimiterAdvisor.class) ;
 
     @Autowired
-    MethodRateLimiterBeforeInterceptor advice ;
+    UserRateLimiterBeforeInterceptor advice ;
 
     @PostConstruct
     public void init(){
