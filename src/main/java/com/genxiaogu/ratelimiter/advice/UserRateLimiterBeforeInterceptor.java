@@ -13,6 +13,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -42,22 +43,6 @@ public class UserRateLimiterBeforeInterceptor implements MethodInterceptor {
         String obj = null ;
 
         Method method = methodInvocation.getMethod();
-
-        for (Annotation[] annotations : method.getParameterAnnotations()) {
-            /*
-             * 如果方法具有Limiter注解，则需要把method，limit拿出来
-             */
-            for (Annotation annotation : annotations) {
-                if(annotation instanceof UserLimiter){
-                    route = ((UserLimiter)annotation).route() ;
-                    limit = ((UserLimiter)annotation).limit() ;
-                    methodInvocation.getArguments() ;
-                    if(!distributedLimiter.execute(route , limit)) {
-                        throw new LimiterException("访问太过频繁，请稍后再试！") ;
-                    }
-                }
-            }
-        }
 
         Annotation[][] annotations = method.getParameterAnnotations() ;
         for (int i = 0; i < annotations.length ; i++) {

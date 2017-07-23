@@ -8,6 +8,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.HashMap;
  * @author genxiaogu
  */
 @Component
+@Order
 public class MethodRateLimiterBeforeInterceptor implements MethodInterceptor {
 
     Logger logger = LoggerFactory.getLogger(MethodRateLimiterBeforeInterceptor.class) ;
@@ -27,7 +30,8 @@ public class MethodRateLimiterBeforeInterceptor implements MethodInterceptor {
     @Autowired
     private RedisTemplate<String , String> redisTemplate;
 
-    private static HashMap<String , DistributedLimiter> distributedLimiterHashMap = new HashMap<String, DistributedLimiter>(16) ;
+    @Autowired
+    DistributedLimiter distributedLimiter ;
 
     /**
      * 执行逻辑
@@ -50,15 +54,13 @@ public class MethodRateLimiterBeforeInterceptor implements MethodInterceptor {
                 Limiter limiter = method.getAnnotation(Limiter.class);
                 route = limiter.route();
                 limit = limiter.limit();
-                if(!distributedLimiterHashMap.containsKey(route)){
-                    distributedLimiterHashMap.put(route , new DistributedLimiter(redisTemplate , route , limit)) ;
+
+                if(!distributedLimiter.execute(route , limit)) {
+                    throw new LimiterException("访问太过频繁，请稍后再试！") ;
                 }
             }
         }
-
-        if(!distributedLimiterHashMap.get(route).execute()) {
-            throw new LimiterException("访问太过频繁，请稍后再试！") ;
-        }
         return methodInvocation.proceed() ;
     }
+
 }
