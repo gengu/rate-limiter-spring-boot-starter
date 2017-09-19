@@ -1,23 +1,39 @@
 --
 -- Created by IntelliJ IDEA.
--- User: wb-lz260260
+-- User: junzijian
 -- Date: 2017/9/18
--- Time: 15:54
+-- Time: 15:30
 -- To change this template use File | Settings | File Templates.
--- getLock
+-- getLock2 分步执行
 
--- lua的索引从1开始
 local key = KEYS[1]
 local value = ARGV[1]
 local expire = ARGV[2]
 
---得到锁
-if redis.pcall("SET", key, value, "NX", "PX", expire) then
-    return 1
-    --检查过期时间, 并在必要时对其更新
-elseif redis.call("TTL", key) == -1 then
-    redis.call("PEXPIRE", key, expire)
-    return 0
-else
-    return 0
+if redis.call("setnx", key, value) == 1 then
+    if redis.call("pexpire", key, expire) == 1 then
+        return 1
+    end
+elseif redis.call("ttl", key) == -1 then
+    redis.call("pexpire", key, expire)
 end
+return 0
+
+
+
+--[[
+local key = KEYS[1]
+local value = ARGV[1]
+local expire = ARGV[2]
+
+if redis.call("setnx", key, value) == 1 then
+redis.call("pexpire", key, expire)
+return 1
+elseif redis.call("ttl", key) == -1 then
+redis.call("pexpire", key, expire)
+end
+return 0
+]]
+
+
+
