@@ -3,13 +3,14 @@ package com.genxiaogu.ratelimiter.service.impl;
 import com.genxiaogu.ratelimiter.service.Limiter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static com.genxiaogu.ratelimiter.dto.LimitDTO.*;
 import static com.genxiaogu.ratelimiter.lock.LuaScriptLock.*;
 
 /**
@@ -93,52 +94,32 @@ public class DistributedLimiter implements Limiter {
     }
 
 
-
-
-    // ------------------------------------以下代码已废弃！仅留作笔记用----------------------------------------------------
-    // ------------------------------------以下代码已废弃！仅留作笔记用----------------------------------------------------
-    // ------------------------------------以下代码已废弃！仅留作笔记用----------------------------------------------------
-
-
     /**
-     * 3
+     * doSomething
      * <p>
-     * 留作笔记用
+     * lua实现
      *
-     * @param route
-     * @param limit
-     * @param obj
+     * @param redisTemplate
+     * @param key
+     * @param limit         这里默认 limit必须 >= 1
+     * @param timeOut
      * @return
      */
-    public boolean execute3(String route, Integer limit, String obj) {
+    private boolean execLimit(RedisTemplate redisTemplate, final String key, String limit, String timeOut) {
 
-        final byte[] key = route.concat(obj).getBytes();
-        final byte[] lockKey = ("lock:" + route.concat(obj)).getBytes();
-        final byte[] lockValue = UUID.randomUUID().toString().getBytes();
-        final byte[] lockTimeOut = String.valueOf(LOCK_TIME_OUT).getBytes();
-        RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/rateLimit.lua")));
+        redisScript.setResultType(Long.TYPE);
 
-        boolean bool = false;
-        try {
+        Object result = redisTemplate.execute(redisScript, new ArrayList() {{
+            add(key);
+        }}, limit, timeOut);
 
-            if (getLock3(connection, lockKey, lockValue, lockTimeOut)) {
-
-                // doSomething
-                bool = execLimit3(connection, key, limit, KEY_TIME_OUT);
-            }
-
-        } catch (Exception e) {
-            logger.error("DistributedLimiter execute error.", e);
-        } finally {
-            releaseLock3(connection, lockKey, lockValue);
+        if ((long) result == 1) {
+            return true;
         }
+        return false;
 
-        return bool;
     }
-
-    // ------------------------------------以上代码已废弃！仅留作笔记用----------------------------------------------------
-    // ------------------------------------以上代码已废弃！仅留作笔记用----------------------------------------------------
-    // ------------------------------------以上代码已废弃！仅留作笔记用----------------------------------------------------
-
 
 }
