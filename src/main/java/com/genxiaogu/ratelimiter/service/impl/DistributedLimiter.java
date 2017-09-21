@@ -4,17 +4,16 @@ import com.genxiaogu.ratelimiter.service.Limiter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
+import static com.genxiaogu.ratelimiter.dto.LimitDTO.*;
 import static com.genxiaogu.ratelimiter.lock.LuaScriptLock.*;
 
 /**
- * Created by wb-lz260260 on 2017/7/4.
+ * Created by junzijian on 2017/7/4.
  */
 public class DistributedLimiter implements Limiter {
 
@@ -70,59 +69,40 @@ public class DistributedLimiter implements Limiter {
     public boolean execute(String route, Integer limit, String obj) {
 
         final String key = route.concat(obj);
-        final String lockKey = "lock:" + route.concat(obj);
+        final String lockKey = "lock:" + key;
         final String lockValue = UUID.randomUUID().toString();
 
         boolean bool = false;
         try {
-            if (getLock(redisTemplate, new ArrayList<String>() {{add(lockKey);}}, lockValue, String.valueOf(LOCK_TIME_OUT))) {
+            if (getLock(redisTemplate, new ArrayList<String>() {{
+                add(lockKey);
+            }}, lockValue, String.valueOf(LOCK_TIME_OUT))) {
 
                 // doSomething
-                bool = execLimit(redisTemplate, key.getBytes(), limit, KEY_TIME_OUT);
+                bool = execLimit(redisTemplate, key, String.valueOf(limit), String.valueOf(KEY_TIME_OUT));
             }
         } catch (Exception e) {
             logger.error("DistributedLimiter execute error.", e);
         } finally {
-            releaseLock(redisTemplate, new ArrayList<String>() {{add(lockKey);}}, lockValue);
+            releaseLock(redisTemplate, new ArrayList<String>() {{
+                add(lockKey);
+            }}, lockValue);
         }
 
         return bool;
-    }
-
-    /**
-     * doSomething
-     *
-     * @param redisTemplate
-     * @param key
-     * @param limit         这里默认 limit必须 >= 1
-     * @param timeOut
-     * @return
-     */
-    private boolean execLimit(RedisTemplate redisTemplate, byte[] key, Integer limit, long timeOut) {
-
-        BoundValueOperations boundValueOps = redisTemplate.boundValueOps(key);
-
-        if (null == boundValueOps.get()) {
-            boundValueOps.set("1", timeOut, TimeUnit.MILLISECONDS);
-            return true;
-        } else {
-            if (boundValueOps.increment(1) > limit) {
-                return false;
-            }
-            return true;
-        }
-
     }
 
 
 
 
     // ------------------------------------以下代码已废弃！仅留作笔记用----------------------------------------------------
+    // ------------------------------------以下代码已废弃！仅留作笔记用----------------------------------------------------
+    // ------------------------------------以下代码已废弃！仅留作笔记用----------------------------------------------------
 
 
     /**
      * 3
-     *
+     * <p>
      * 留作笔记用
      *
      * @param route
@@ -144,7 +124,7 @@ public class DistributedLimiter implements Limiter {
             if (getLock3(connection, lockKey, lockValue, lockTimeOut)) {
 
                 // doSomething
-                bool = execLimit(connection, key, limit, KEY_TIME_OUT);
+                bool = execLimit3(connection, key, limit, KEY_TIME_OUT);
             }
 
         } catch (Exception e) {
@@ -156,30 +136,9 @@ public class DistributedLimiter implements Limiter {
         return bool;
     }
 
+    // ------------------------------------以上代码已废弃！仅留作笔记用----------------------------------------------------
+    // ------------------------------------以上代码已废弃！仅留作笔记用----------------------------------------------------
+    // ------------------------------------以上代码已废弃！仅留作笔记用----------------------------------------------------
 
-    /**
-     * doSomething
-     *
-     * 留作笔记用
-     *
-     * @param connection
-     * @param key
-     * @param limit         limit 可以为0
-     * @param timeOut
-     * @return
-     */
-    private boolean execLimit(RedisConnection connection, byte[] key, Integer limit, long timeOut) {
-
-        if (!connection.exists(key)) {
-            connection.pSetEx(key, timeOut, "0".getBytes());
-        }
-
-        if (connection.incr(key) > limit) {
-            return false;
-        } else {
-            return true;
-        }
-
-    }
 
 }

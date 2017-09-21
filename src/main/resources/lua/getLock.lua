@@ -9,13 +9,13 @@
 -- lua的索引从1开始
 local key = KEYS[1]
 local value = ARGV[1]
-local expire = ARGV[2]
+local pExpire = ARGV[2]
 
 --得到锁
-if redis.call("SET", key, value, "NX", "PX", expire) then
+if redis.call("SET", key, value, "NX", "PX", pExpire) then
     return 1
     --检查过期时间, 并在必要时对其更新
 elseif redis.call("TTL", key) == -1 then
-    redis.call("PEXPIRE", key, expire)
+    redis.call("PEXPIRE", key, pExpire)
 end
 return 0

@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Lua实现分布式锁
  * <p>
- * Created by wb-lz260260 on 2017/9/18.
+ * Created by junzijian on 2017/9/18.
  */
 public class LuaScriptLock {
 
@@ -38,7 +38,7 @@ public class LuaScriptLock {
     public static boolean getLock(RedisTemplate redisTemplate, List<String> lockKey, String lockValue, String lockTimeOut) {
 
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/getLock2.lua")));
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/getLock.lua")));
         redisScript.setResultType(Long.class);
 
         /**

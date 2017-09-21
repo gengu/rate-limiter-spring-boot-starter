@@ -7,7 +7,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 /**
  * java实现分布式锁
  * <p>
- * Created by wb-lz260260 on 2017/9/18.
+ * Created by junzijian on 2017/9/18.
  */
 public class DistributedLock {
 
@@ -46,7 +46,7 @@ public class DistributedLock {
         if (connection.get(key).equals(value)) {
             connection.multi();
             connection.del(key);
-            connection.exec();      // connection.exec().isEmpty()
+            connection.exec();      // connection.dto().isEmpty()
         }
         connection.unwatch();
 
