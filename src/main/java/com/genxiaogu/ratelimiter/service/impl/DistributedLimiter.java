@@ -9,9 +9,6 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.util.ArrayList;
-import java.util.UUID;
-
-import static com.genxiaogu.ratelimiter.lock.LuaScriptLock.*;
 
 /**
  * Created by junzijian on 2017/7/4.
@@ -20,9 +17,7 @@ public class DistributedLimiter implements Limiter {
 
     private static final Logger logger = LogManager.getLogger(DistributedLimiter.class);
 
-    public static final long LOCK_TIME_OUT = 1000;
-
-    public static final long KEY_TIME_OUT = 1000;
+    public static final String TIME_OUT = "1000";
 
     private RedisTemplate redisTemplate;
 
@@ -70,58 +65,17 @@ public class DistributedLimiter implements Limiter {
     public boolean execute(String route, Integer limit, String obj) {
 
         final String key = route.concat(obj);
-        final String lockKey = "lock:" + key;
-        final String lockValue = UUID.randomUUID().toString();
-
-        boolean bool = false;
-        try {
-            if (getLock(redisTemplate, new ArrayList<String>() {{
-                add(lockKey);
-            }}, lockValue, String.valueOf(LOCK_TIME_OUT))) {
-
-                // doSomething
-                bool = execLimit(redisTemplate, key, String.valueOf(limit), String.valueOf(KEY_TIME_OUT));
-            }
-        } catch (Exception e) {
-            logger.error("DistributedLimiter execute : getLock or execLimit error.", e);
-            // 异常时，优先保证服务可用
-            return true;
-        } finally {
-            releaseLock(redisTemplate, new ArrayList<String>() {{
-                add(lockKey);
-            }}, lockValue);
-        }
-
-        return bool;
-    }
-
-
-    /**
-     * doSomething
-     * <p>
-     * lua实现
-     *
-     * @param redisTemplate
-     * @param key
-     * @param limit         这里默认 limit必须 >= 1
-     * @param timeOut
-     * @return
-     */
-    private boolean execLimit(RedisTemplate redisTemplate, final String key, String limit, String timeOut) {
 
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/rateLimit.lua")));
         redisScript.setResultType(Long.TYPE);
 
-        Object result = redisTemplate.execute(redisScript, new ArrayList() {{
-            add(key);
-        }}, limit, timeOut);
+        Object result = redisTemplate.execute(redisScript, new ArrayList() {{add(key);}}, String.valueOf(limit), TIME_OUT);
 
         if ((long) result == 1) {
             return true;
         }
         return false;
-
     }
 
 }
