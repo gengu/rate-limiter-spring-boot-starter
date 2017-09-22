@@ -17,7 +17,7 @@ else
     if redis.call("TTL", key) == -1 then
         redis.call("PEXPIRE", key, pExpire)
     end
-    if redis.call("INCR", key) < limit then
+    if redis.call("INCR", key) <= limit then
         return 1
     end
 end

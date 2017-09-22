@@ -83,7 +83,9 @@ public class DistributedLimiter implements Limiter {
                 bool = execLimit(redisTemplate, key, String.valueOf(limit), String.valueOf(KEY_TIME_OUT));
             }
         } catch (Exception e) {
-            logger.error("DistributedLimiter execute error.", e);
+            logger.error("DistributedLimiter execute : getLock or execLimit error.", e);
+            // 异常时，优先保证服务可用
+            return true;
         } finally {
             releaseLock(redisTemplate, new ArrayList<String>() {{
                 add(lockKey);
