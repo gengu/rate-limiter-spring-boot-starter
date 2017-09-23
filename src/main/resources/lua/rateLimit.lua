@@ -14,11 +14,11 @@ local pExpire = ARGV[2]
 if redis.call("SET", key, value, "NX", "PX", pExpire) then
     return 1
 else
-    if redis.call("TTL", key) == -1 then
-        redis.call("PEXPIRE", key, pExpire)
-    end
     if redis.call("INCR", key) <= limit then
         return 1
+    end
+    if redis.call("TTL", key) == -1 then
+        redis.call("PEXPIRE", key, pExpire)
     end
 end
 return 0
