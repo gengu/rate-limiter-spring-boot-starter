@@ -26,3 +26,4 @@ nbdist/
 /mvnw
 /.mvn/
 /logs/
+src/main/resources/lua/test.lua
