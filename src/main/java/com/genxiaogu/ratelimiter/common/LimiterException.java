@@ -1,7 +1,7 @@
 package com.genxiaogu.ratelimiter.common;
 
 /**
- * Created by wb-lz260260 on 2017/7/4.
+ * @author genxiaogu
  */
 public class LimiterException extends RuntimeException{
     private String msg;

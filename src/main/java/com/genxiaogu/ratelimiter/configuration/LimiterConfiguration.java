@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class LimiterConfiguration {
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    StringRedisTemplate redisTemplate;
 
     /**
      * 自动代理生成器
@@ -56,7 +56,7 @@ public class LimiterConfiguration {
 
     @Bean
     public DistributedLimiter distributedLimiter(){
-        return new DistributedLimiter(stringRedisTemplate) ;
+        return new DistributedLimiter(redisTemplate) ;
     }
 
 }

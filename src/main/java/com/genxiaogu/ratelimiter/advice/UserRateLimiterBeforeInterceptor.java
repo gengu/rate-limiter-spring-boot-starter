@@ -33,7 +33,7 @@ public class UserRateLimiterBeforeInterceptor implements MethodInterceptor {
     /**
      * 执行逻辑
      * @param methodInvocation
-     * @return
+     * @return Object
      * @throws Throwable
      */
     @Override
